@@ -21,10 +21,7 @@ services:
       - key: JWT_REFRESH_SECRET
         generateValue: true
       - key: CORS_ORIGIN
-        fromService:
-          type: web
-          name: primetrade-frontend
-          property: url
+        value: "*" # Allow all origins temporarily until you lock it down in the dashboard
 
   # Frontend Static Site
   - type: web
@@ -36,10 +33,7 @@ services:
     staticPublishPath: frontend/dist
     envVars:
       - key: VITE_API_URL
-        fromService:
-          type: web
-          name: primetrade-backend
-          property: url
+        value: "UPDATE_ME_IN_DASHBOARD" # You will replace this with your actual backend URL in the Render dashboard
     # SPA routing rewrite rule to redirect all routes to index.html
     routes:
       - type: rewrite
@@ -50,5 +44,3 @@ databases:
   # PostgreSQL Database Instance
   - name: primetrade-postgres
     plan: free
-    databaseName: primetrade_db
-    user: postgres
