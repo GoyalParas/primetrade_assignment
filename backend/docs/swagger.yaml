@@ -1,0 +1,564 @@
+openapi: 3.1.0
+info:
+  title: Primetrade REST API
+  description: Scalable REST API with JWT Authentication & Role-Based Access Control
+  version: 1.0.0
+servers:
+  - url: http://localhost:5000
+    description: Local development server
+  - url: https://primetrade-api.onrender.com
+    description: Production/Staging server
+paths:
+  /api/v1/health:
+    get:
+      summary: Health check
+      description: Returns uptime, timestamp, and database status
+      responses:
+        '200':
+          description: Service is healthy
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HealthCheckResponse'
+        '500':
+          description: Service is unhealthy
+
+  /api/v1/auth/register:
+    post:
+      summary: Register a new user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegisterRequest'
+      responses:
+        '201':
+          description: User registered successfully
+          headers:
+            Set-Cookie:
+              schema:
+                type: string
+                description: Refresh token cookie
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthSuccessResponse'
+        '400':
+          description: Invalid input / validation failure
+        '409':
+          description: Email already exists
+
+  /api/v1/auth/login:
+    post:
+      summary: Log in a user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+      responses:
+        '200':
+          description: User logged in successfully
+          headers:
+            Set-Cookie:
+              schema:
+                type: string
+                description: Refresh token cookie
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthSuccessResponse'
+        '401':
+          description: Invalid email or password
+
+  /api/v1/auth/refresh:
+    post:
+      summary: Refresh access token
+      description: Requires refresh token in HttpOnly cookie or request body
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                refreshToken:
+                  type: string
+      responses:
+        '200':
+          description: Access token refreshed successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthSuccessResponse'
+        '401':
+          description: Invalid or expired refresh token
+
+  /api/v1/auth/logout:
+    post:
+      summary: Log out user
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: User logged out successfully
+
+  /api/v1/auth/me:
+    get:
+      summary: Get current user profile
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Profile retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  statusCode:
+                    type: integer
+                  message:
+                    type: string
+                  data:
+                    type: object
+                    properties:
+                      user:
+                        $ref: '#/components/schemas/User'
+
+  /api/v1/tasks:
+    get:
+      summary: Get list of tasks
+      description: Returns tasks. Regular users see only their own. Admins see all tasks.
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: page
+          in: query
+          schema:
+            type: integer
+            default: 1
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 10
+        - name: status
+          in: query
+          schema:
+            type: string
+            enum: [TODO, IN_PROGRESS, DONE]
+        - name: priority
+          in: query
+          schema:
+            type: string
+            enum: [LOW, MEDIUM, HIGH, URGENT]
+        - name: search
+          in: query
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Tasks retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedTasksResponse'
+
+    post:
+      summary: Create a new task
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateTaskRequest'
+      responses:
+        '201':
+          description: Task created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  statusCode:
+                    type: integer
+                  message:
+                    type: string
+                  data:
+                    $ref: '#/components/schemas/Task'
+
+  /api/v1/tasks/{id}:
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+    get:
+      summary: Get a task by ID
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Task retrieved successfully
+        '403':
+          description: Forbidden (not the task owner)
+        '404':
+          description: Task not found
+
+    patch:
+      summary: Update a task
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateTaskRequest'
+      responses:
+        '200':
+          description: Task updated successfully
+        '403':
+          description: Forbidden
+        '404':
+          description: Task not found
+
+    delete:
+      summary: Delete a task
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Task deleted successfully
+        '403':
+          description: Forbidden
+        '404':
+          description: Task not found
+
+  /api/v1/admin/users:
+    get:
+      summary: List all users (Admin only)
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: page
+          in: query
+          schema:
+            type: integer
+            default: 1
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 10
+      responses:
+        '200':
+          description: Users retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedUsersResponse'
+        '403':
+          description: Forbidden - Admin access required
+
+  /api/v1/admin/users/{id}/role:
+    patch:
+      summary: Change a user's role (Admin only)
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - role
+              properties:
+                role:
+                  type: string
+                  enum: [USER, ADMIN]
+      responses:
+        '200':
+          description: Role updated successfully
+        '400':
+          description: Cannot change your own role
+        '403':
+          description: Forbidden
+        '404':
+          description: User not found
+
+  /api/v1/admin/users/{id}:
+    delete:
+      summary: Delete a user account (Admin only)
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: User deleted successfully
+        '400':
+          description: Cannot delete your own admin account
+        '403':
+          description: Forbidden
+        '404':
+          description: User not found
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+    User:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        email:
+          type: string
+        role:
+          type: string
+          enum: [USER, ADMIN]
+        createdAt:
+          type: string
+          format: date-time
+
+    Task:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        title:
+          type: string
+        description:
+          type: string
+          nullable: true
+        status:
+          type: string
+          enum: [TODO, IN_PROGRESS, DONE]
+        priority:
+          type: string
+          enum: [LOW, MEDIUM, HIGH, URGENT]
+        dueDate:
+          type: string
+          format: date-time
+          nullable: true
+        userId:
+          type: string
+          format: uuid
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+
+    RegisterRequest:
+      type: object
+      required:
+        - name
+        - email
+        - password
+      properties:
+        name:
+          type: string
+          minLength: 2
+        email:
+          type: string
+          format: email
+        password:
+          type: string
+          minLength: 6
+        role:
+          type: string
+          enum: [USER, ADMIN]
+          default: USER
+
+    LoginRequest:
+      type: object
+      required:
+        - email
+        - password
+      properties:
+        email:
+          type: string
+          format: email
+        password:
+          type: string
+
+    AuthSuccessResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        statusCode:
+          type: integer
+        message:
+          type: string
+        data:
+          type: object
+          properties:
+            user:
+              $ref: '#/components/schemas/User'
+            accessToken:
+              type: string
+
+    HealthCheckResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        statusCode:
+          type: integer
+        message:
+          type: string
+        data:
+          type: object
+          properties:
+            timestamp:
+              type: string
+            uptime:
+              type: number
+            database:
+              type: string
+
+    CreateTaskRequest:
+      type: object
+      required:
+        - title
+      properties:
+        title:
+          type: string
+          maxLength: 100
+        description:
+          type: string
+          maxLength: 1000
+        status:
+          type: string
+          enum: [TODO, IN_PROGRESS, DONE]
+        priority:
+          type: string
+          enum: [LOW, MEDIUM, HIGH, URGENT]
+        dueDate:
+          type: string
+          format: date-time
+          nullable: true
+
+    UpdateTaskRequest:
+      type: object
+      properties:
+        title:
+          type: string
+          maxLength: 100
+        description:
+          type: string
+          maxLength: 1000
+        status:
+          type: string
+          enum: [TODO, IN_PROGRESS, DONE]
+        priority:
+          type: string
+          enum: [LOW, MEDIUM, HIGH, URGENT]
+        dueDate:
+          type: string
+          format: date-time
+          nullable: true
+
+    PaginatedTasksResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        statusCode:
+          type: integer
+        message:
+          type: string
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Task'
+        meta:
+          type: object
+          properties:
+            page:
+              type: integer
+            limit:
+              type: integer
+            total:
+              type: integer
+            totalPages:
+              type: integer
+
+    PaginatedUsersResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        statusCode:
+          type: integer
+        message:
+          type: string
+        data:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+                format: uuid
+              name:
+                type: string
+              email:
+                type: string
+              role:
+                type: string
+              createdAt:
+                type: string
+                format: date-time
+              _count:
+                type: object
+                properties:
+                  tasks:
+                    type: integer
+        meta:
+          type: object
+          properties:
+            page:
+              type: integer
+            limit:
+              type: integer
+            total:
+              type: integer
+            totalPages:
+              type: integer

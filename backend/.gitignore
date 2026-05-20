@@ -1,0 +1,11 @@
+node_modules/
+dist/
+.env
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Prisma sqlite db (if any used in development)
+prisma/*.db
+prisma/*.db-journal
