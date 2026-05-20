@@ -33,7 +33,7 @@ services:
     repo: https://github.com/GoyalParas/primetrade_assignment # Users will replace this with their repo
     plan: free
     buildCommand: cd frontend && npm install --legacy-peer-deps && npm run build
-    publishDir: frontend/dist
+    staticPublishPath: frontend/dist
     envVars:
       - key: VITE_API_URL
         fromService:
