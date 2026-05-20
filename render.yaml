@@ -21,7 +21,7 @@ services:
       - key: JWT_REFRESH_SECRET
         generateValue: true
       - key: CORS_ORIGIN
-        value: "*" # Allow all origins temporarily until you lock it down in the dashboard
+        value: "https://update-me-in-dashboard.com" # You will replace this with your actual frontend URL in the Render dashboard
 
   # Frontend Static Site
   - type: web
