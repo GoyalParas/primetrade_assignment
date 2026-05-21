@@ -1,7 +1,12 @@
 # 🖥️ Primetrade REST API (Backend Console)
 
 **🟢 Live Demo (Deployed):** [Click here to open the live website](https://primetrade-frontend-r5vs.onrender.com/login)
-This directory contains the production-ready Node/Express backend application for the Primetrade assignment.
+
+<h3 align="center">
+  <span style="color:red;">⚡ Use the built-in autofill buttons on the login screen for instant access!</span>
+</h3>
+
+This directory contains the production-ready Node/Express backend application.
 
 ---
 
