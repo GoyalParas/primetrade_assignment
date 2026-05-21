@@ -1,5 +1,7 @@
 # 🚀 Primetrade.ai - Task Workspace Platform
 
+**🟢 Live Demo (Deployed):** [Click here to open the live website](https://primetrade-frontend-r5vs.onrender.com/login)
+*(Use the built-in autofill buttons on the login screen for instant access!)*
 [![Docker Compose](https://img.shields.io/badge/Docker--Compose-Supported-cyan?logo=docker&logoColor=white)](docker-compose.yml)
 [![Node.js](https://img.shields.io/badge/Node.js-v20-emerald)](backend/package.json)
 [![React](https://img.shields.io/badge/React-v19-blue)](frontend/package.json)
