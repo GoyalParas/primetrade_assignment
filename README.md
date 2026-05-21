@@ -1,14 +1,17 @@
 # 🚀 Primetrade.ai - Task Workspace Platform
-
+ 
 **🟢 Live Demo (Deployed):** [Click here to open the live website](https://primetrade-frontend-r5vs.onrender.com/login)
-*(Use the built-in autofill buttons on the login screen for instant access!)*
+<h3 align="center">
+  <span style="color:red;">⚡ Use the built-in autofill buttons on the login screen for instant access!</span>
+</h3>
+
 [![Docker Compose](https://img.shields.io/badge/Docker--Compose-Supported-cyan?logo=docker&logoColor=white)](docker-compose.yml)
 [![Node.js](https://img.shields.io/badge/Node.js-v20-emerald)](backend/package.json)
 [![React](https://img.shields.io/badge/React-v19-blue)](frontend/package.json)
 [![Prisma](https://img.shields.io/badge/Prisma-ORM-indigo)](backend/prisma/schema.prisma)
 [![Swagger](https://img.shields.io/badge/OpenAPI-3.1-darkgreen)](backend/docs/swagger.yaml)
 
-A production-ready, highly-scalable **REST API with Authentication & Role-Based Access Control (RBAC)** accompanied by a premium **React frontend client**. Engineered as an assignment submission to demonstrate secure backend designs, DB modeling, performance caching, error boundaries, and Docker/Cloud infrastructure orchestration.
+A production-ready, highly-scalable, Task Manager website featuring **REST API with Authentication & Role-Based Access Control (RBAC)** accompanied by a premium **React frontend client**. Engineered  to demonstrate secure backend designs, DB modeling, performance caching, error boundaries, and Docker/Cloud infrastructure orchestration.
 
 ---
 
@@ -173,4 +176,6 @@ primetrade_assignment/
 This application is ready to deploy to the cloud:
 - **Backend & Database**: Render web service and database (configured in [`render.yaml`](render.yaml)).
 - **Frontend Client**: Vercel or Render Static Site.
-- Simply click "New Blueprint" on Render and link this repository!
+- Simply click "New Blueprint" on Render and link this repository !
+
+
