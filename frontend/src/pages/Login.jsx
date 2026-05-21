@@ -146,17 +146,17 @@ const Login = () => {
             <div className="grid grid-cols-2 gap-3">
               <button
                 onClick={() => autofillCredentials('admin')}
-                className="rounded-lg border border-slate-800 bg-slate-950/40 px-3 py-2 text-xs font-medium text-slate-300 hover:bg-slate-850 hover:border-slate-700 transition-all text-center md:text-left cursor-pointer flex flex-col"
+                className="rounded-lg border border-slate-800 bg-slate-950/40 px-3 py-2 text-xs font-medium text-white hover:bg-slate-850 hover:border-slate-700 transition-all text-center md:text-left cursor-pointer flex flex-col"
               >
                 Autofill Admin
-                <span className="block text-[9px] text-slate-500 font-mono mt-0.5">admin@primetrade.ai</span>
+                <span className="block text-[9px] text-slate-300 font-mono mt-0.5">admin@primetrade.ai</span>
               </button>
               <button
                 onClick={() => autofillCredentials('user')}
-                className="rounded-lg border border-slate-800 bg-slate-950/40 px-3 py-2 text-xs font-medium text-slate-300 hover:bg-slate-800 hover:border-slate-700 transition-all text-center md:text-left cursor-pointer flex flex-col"
+                className="rounded-lg border border-slate-800 bg-slate-950/40 px-3 py-2 text-xs font-medium text-white hover:bg-slate-800 hover:border-slate-700 transition-all text-center md:text-left cursor-pointer flex flex-col"
               >
                 Autofill User
-                <span className="block text-[9px] text-slate-500 font-mono mt-0.5">user@primetrade.ai</span>
+                <span className="block text-[9px] text-slate-300 font-mono mt-0.5">user@primetrade.ai</span>
               </button>
             </div>
           </div>
