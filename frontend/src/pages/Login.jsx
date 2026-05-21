@@ -36,7 +36,7 @@ const Login = () => {
   return (
     <div className="flex min-h-[calc(100vh-10rem)] items-center justify-center p-4">
       <div className="flex w-full max-w-4xl overflow-hidden rounded-2xl border border-slate-800 bg-slate-900/50 shadow-2xl backdrop-blur-md">
-        
+
         {/* Left Column - Info / Hero (hidden on small screens) */}
         <div className="hidden w-1/2 flex-col justify-center bg-slate-950/80 p-10 md:flex relative overflow-hidden border-r border-slate-800">
           <div className="relative z-10">
@@ -49,7 +49,7 @@ const Login = () => {
             <p className="text-slate-300 mb-6 leading-relaxed text-sm">
               <strong className="text-white">Primetrade TaskFlow</strong> is a robust, full-stack task management application designed for modern teams to streamline workflows and track priorities efficiently. Built with performance and security in mind.
             </p>
-            
+
             <h3 className="text-base font-semibold text-cyan-400 mb-4 uppercase tracking-wider">Core Features & Usage</h3>
             <div className="space-y-6">
               <div className="flex items-start gap-4 text-base text-slate-300">
@@ -146,17 +146,19 @@ const Login = () => {
             <div className="grid grid-cols-2 gap-3">
               <button
                 onClick={() => autofillCredentials('admin')}
-                className="rounded-lg border border-slate-800 bg-slate-950/40 px-3 py-2 text-xs font-medium text-white hover:bg-slate-850 hover:border-slate-700 transition-all text-center md:text-left cursor-pointer flex flex-col"
+                style={{ background: 'linear-gradient(to top right, #14b8a6, #0d9488)', border: 'none' }}
+                className="rounded-lg px-3 py-2 text-xs font-semibold text-white transition-all text-center md:text-left cursor-pointer flex flex-col shadow-lg"
               >
                 Autofill Admin
-                <span className="block text-[9px] text-slate-300 font-mono mt-0.5">admin@primetrade.ai</span>
+                <span className="block text-[9px] text-slate-100 font-mono mt-0.5">admin@primetrade.ai</span>
               </button>
               <button
                 onClick={() => autofillCredentials('user')}
-                className="rounded-lg border border-slate-800 bg-slate-950/40 px-3 py-2 text-xs font-medium text-white hover:bg-slate-800 hover:border-slate-700 transition-all text-center md:text-left cursor-pointer flex flex-col"
+                style={{ background: 'linear-gradient(to top right, #14b8a6, #0d9488)', border: 'none' }}
+                className="rounded-lg px-3 py-2 text-xs font-semibold text-white transition-all text-center md:text-left cursor-pointer flex flex-col shadow-lg"
               >
                 Autofill User
-                <span className="block text-[9px] text-slate-300 font-mono mt-0.5">user@primetrade.ai</span>
+                <span className="block text-[9px] text-slate-100 font-mono mt-0.5">user@primetrade.ai</span>
               </button>
             </div>
           </div>
